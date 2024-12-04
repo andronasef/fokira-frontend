@@ -7,33 +7,25 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "@nuxtjs/i18n",
+    "@vueuse/motion/nuxt",
   ],
   i18n: {
+    defaultLocale: "ar",
     locales: [
       {
         code: "ar",
-        file: "ar.json",
         dir: "rtl",
+        file: "ar.json",
       },
       {
         code: "en",
         file: "en.json",
       },
     ],
-    lazy: false,
-    vueI18n: "./i18n.config.ts",
   },
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:8000",
-    },
-  },
-  app: {
-    head: {
-      htmlAttrs: {
-        dir: "rtl",
-        lang: "ar",
-      },
     },
   },
 });

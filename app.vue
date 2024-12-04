@@ -1,13 +1,17 @@
 <template>
-  <div class="min-h-screen bg-gray-50" :dir="$i18n.locale === 'ar' ? 'rtl' : 'ltr'">
-    <AppHeader />
+  <NuxtLayout>
     <NuxtPage />
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-// Update HTML dir attribute when locale changes
-watch(() => useI18n().locale.value, (newLocale) => {
-  document.documentElement.dir = newLocale === 'ar' ? 'rtl' : 'ltr';
+const { locale } = useI18n();
+
+// Set HTML dir attribute
+useHead({
+  htmlAttrs: {
+    dir: computed(() => locale.value === 'ar' ? 'rtl' : 'ltr'),
+    lang: computed(() => locale.value),
+  },
 });
 </script>
