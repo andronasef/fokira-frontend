@@ -46,7 +46,10 @@
         @click.stop
       >
         <div class="flex items-center space-x-3 space-x-reverse">
-          <UiAvatar :name="post.author.name" :src="post.author.avatar" />
+          <UiAvatar 
+            :author="post.author"
+            size="md"
+          />
           <div class="text-white">
             <h3 class="font-semibold">{{ post.author.name }}</h3>
             <p class="text-sm opacity-80">
