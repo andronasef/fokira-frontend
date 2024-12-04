@@ -11,7 +11,7 @@
             :initial="{ opacity: 0, x: -20 }"
             :enter="{ opacity: 1, x: 0 }"
           >
-            فكرة
+            فوكيرة
           </NuxtLink>
 
           <div class="hidden md:flex items-center space-x-4 space-x-reverse">
@@ -69,14 +69,20 @@
             <div class="relative">
               <button
                 @click="isProfileOpen = !isProfileOpen"
-                class="flex items-center space-x-2 space-x-reverse"
+                class="flex items-center gap-2 space-x-reverse"
                 v-motion
                 :initial="{ opacity: 0 }"
                 :enter="{ opacity: 1 }"
                 :delay="400"
               >
-                <UiAvatar :author="authStore.user" size="sm" />
-                <span class="text-gray-700">{{ authStore.user.name }}</span>
+                <UiAvatar
+                  :author="authStore.user"
+                  size="sm"
+                  :enable-link="false"
+                />
+                <span class="text-gray-700 md:flex hidden">{{
+                  authStore.user.name
+                }}</span>
               </button>
 
               <div

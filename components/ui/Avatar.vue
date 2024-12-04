@@ -1,6 +1,6 @@
 <template>
   <NuxtLink
-    :to="`/profile/${author.id}`"
+    :to="enableLink ? `/profile/${author.id}` : ''"
     class="inline-block"
   >
     <div
@@ -28,11 +28,19 @@
 
 <script setup lang="ts">
 import Avatar from "vue-boring-avatars";
-import type { Author } from '~/types/author';
+import type { Author } from "~/types/author";
 
-defineProps<{
-  author: Author;
-  size?: "sm" | "md" | "lg";
-  variant?: "marble" | "beam" | "pixel" | "sunset" | "ring" | "bauhaus";
-}>();
+const props = withDefaults(
+  defineProps<{
+    author: Author;
+    size?: "sm" | "md" | "lg";
+    variant?: "marble" | "beam" | "pixel" | "sunset" | "ring" | "bauhaus";
+    enableLink?: boolean;
+  }>(),
+  {
+    size: "md",
+    variant: "beam",
+    enableLink: true,
+  }
+);
 </script>
