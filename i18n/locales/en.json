@@ -64,6 +64,16 @@
     "password": "Password",
     "name": "Name"
   },
+  "profile": {
+    "posts": "Posts",
+    "no-posts": "No posts yet",
+    "loading": "Loading..."
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page-of-total": "Page {current} of {total}"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

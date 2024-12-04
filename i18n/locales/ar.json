@@ -55,6 +55,16 @@
       "min-words": "يجب أن يحتوي على كلمة واحدة على الأقل"
     }
   },
+  "profile": {
+    "posts": "المنشورات",
+    "no-posts": "لا توجد منشورات",
+    "loading": "جاري التحميل..."
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page-of-total": "صفحة {current} من {total}"
+  },
   "common": {
     "loading": "جاري التحميل...",
     "error": "حدث خطأ",

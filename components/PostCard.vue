@@ -10,7 +10,7 @@
     <div class="p-4">
       <div class="flex items-start justify-between">
         <div class="flex items-center space-x-3 rtl:space-x-reverse">
-          <UiAvatar :name="post.author.name" :src="post.author.avatar" />
+          <UiAvatar :author="post.author" size="md" />
           <div>
             <h3 class="font-medium">{{ post.author.name }}</h3>
             <time :datetime="post.createdAt" class="text-sm text-gray-500">
@@ -67,10 +67,10 @@
         <h2 class="text-xl font-bold">{{ post.title }}</h2>
 
         <!-- Preview -->
-        <div class="bg-gray-50 rounded-lg p-4">
-          <p class="text-gray-700">
+        <div class="bg-gray-50 rounded-lg p-4 h-full">
+          <p class="text-gray-700 h-full">
             {{ post.slides[0].content }}
-            <span v-if="post.slides.length > 1" class="text-green-600">
+            <span v-if="post.slides.length > 1" class="text-green-600 h-full">
               +{{ post.slides.length - 1 }} {{ t("post.more-slides") }}
             </span>
           </p>
@@ -141,11 +141,12 @@ const deletePost = async () => {
 };
 
 const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString(undefined, {
+  const dateFormatted = new Date(date).toLocaleDateString("ar-EG", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
+  return dateFormatted;
 };
 
 const openViewer = () => {
