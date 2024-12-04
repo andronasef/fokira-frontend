@@ -1,35 +1,46 @@
-import { UseFetchOptions } from 'nuxt/app';
+import { UseFetchOptions } from "nuxt/app";
 
 export function useApi() {
   const config = useRuntimeConfig();
-  const token = useCookie('auth_token');
+  const token = useCookie("auth_token");
 
-  const fetchWithAuth = async <T>(endpoint: string, options: UseFetchOptions<T> = {}) => {
+  const fetchWithAuth = async <T>(
+    endpoint: string,
+    options: UseFetchOptions<T> = {}
+  ) => {
     const headers = {
       ...options.headers,
-      Authorization: `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`,
     };
 
     return useFetch<T>(`${config.public.apiBase}${endpoint}`, {
       ...options,
-      headers
+      headers,
     });
   };
 
   const $fetchWithAuth = async <T>(endpoint: string, options: any = {}) => {
     const headers = {
       ...options.headers,
-      Authorization: `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`,
     };
 
     return $fetch<T>(`${config.public.apiBase}${endpoint}`, {
       ...options,
-      headers
+      headers,
     });
+  };
+
+  const fetchWithoutAuth = async <T>(
+    endpoint: string,
+    options: UseFetchOptions<T> = {}
+  ) => {
+    return useFetch<T>(`${config.public.apiBase}${endpoint}`, options);
   };
 
   return {
     fetchWithAuth,
-    $fetchWithAuth
+    $fetchWithAuth,
+    fetchWithoutAuth,
   };
 }
