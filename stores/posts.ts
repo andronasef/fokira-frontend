@@ -1,32 +1,49 @@
-import { defineStore } from 'pinia';
+import { useRuntimeConfig } from "#imports";
+import { defineStore } from "pinia";
+import { useFetch } from "#imports";
+import { useCookie } from "#imports";
+import { useApi } from "#imports";
 
 interface Slide {
   id: string;
   content: string;
-  duration: number;
   order: number;
+  duration: number;
+}
+
+interface Author {
+  id: string;
+  name: string;
+  avatar: string;
 }
 
 interface Post {
   id: string;
+  title: string;
   slides: Slide[];
-  author: {
-    id: string;
-    name: string;
-    avatar?: string;
-  };
+  author: Author;
   createdAt: string;
+  updatedAt: string;
 }
 
 interface PostsState {
   posts: Post[];
+  myPosts: Post[];
   loading: boolean;
   error: string | null;
 }
 
-export const usePostsStore = defineStore('posts', {
+interface CreatePostData {
+  title: string;
+  slides: {
+    content: string;
+  }[];
+}
+
+export const usePostsStore = defineStore("posts", {
   state: (): PostsState => ({
     posts: [],
+    myPosts: [],
     loading: false,
     error: null,
   }),
@@ -35,74 +52,74 @@ export const usePostsStore = defineStore('posts', {
     async fetchPosts() {
       this.loading = true;
       this.error = null;
-
+      const { fetchWithAuth } = useApi();
+      
       try {
-        const config = useRuntimeConfig();
-        const response = await $fetch<Post[]>(`${config.public.apiBase}/posts`);
-        this.posts = response;
-      } catch (error) {
-        console.error('Failed to fetch posts:', error);
-        this.error = 'Failed to fetch posts';
+        const { data } = await fetchWithAuth<{ posts: Post[] }>('/posts');
+        if (data.value) {
+          this.posts = data.value.posts;
+        }
+      } catch (err: any) {
+        this.error = err.message || 'Failed to fetch posts';
       } finally {
         this.loading = false;
       }
     },
 
-    async createPost(slides: { content: string }[]) {
+    async fetchMyPosts() {
       this.loading = true;
       this.error = null;
-
+      const { fetchWithAuth } = useApi();
+      
       try {
-        const authStore = useAuthStore();
-        if (!authStore.token) {
-          throw new Error('Not authenticated');
+        const { data } = await fetchWithAuth<{ posts: Post[] }>('/posts/my-posts');
+        if (data.value) {
+          this.myPosts = data.value.posts;
         }
+      } catch (err: any) {
+        this.error = err.message || 'Failed to fetch your posts';
+      } finally {
+        this.loading = false;
+      }
+    },
 
-        const config = useRuntimeConfig();
-        const response = await $fetch<Post>(`${config.public.apiBase}/posts`, {
+    async createPost(title: string, slides: { content: string }[]) {
+      this.loading = true;
+      this.error = null;
+      const { $fetchWithAuth } = useApi();
+      
+      try {
+        await $fetchWithAuth('/posts', {
           method: 'POST',
-          body: { slides },
-          headers: {
-            Authorization: `Bearer ${authStore.token}`,
-          },
+          body: { title, slides }
         });
-
-        this.posts.unshift(response);
-      } catch (error) {
-        console.error('Failed to create post:', error);
-        this.error = 'Failed to create post';
-        throw error;
+      } catch (err: any) {
+        this.error = err.message || 'Failed to create post';
+        throw err;
       } finally {
         this.loading = false;
       }
     },
 
-    async deletePost(postId: string) {
+    async deletePost(id: string) {
       this.loading = true;
       this.error = null;
-
+      const { $fetchWithAuth } = useApi();
+      
       try {
-        const authStore = useAuthStore();
-        if (!authStore.token) {
-          throw new Error('Not authenticated');
-        }
-
-        const config = useRuntimeConfig();
-        await $fetch(`${config.public.apiBase}/posts/${postId}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${authStore.token}`,
-          },
+        await $fetchWithAuth(`/posts/${id}`, {
+          method: 'DELETE'
         });
-
-        this.posts = this.posts.filter(post => post.id !== postId);
-      } catch (error) {
-        console.error('Failed to delete post:', error);
-        this.error = 'Failed to delete post';
-        throw error;
+        
+        // Remove post from both lists
+        this.posts = this.posts.filter(post => post.id !== id);
+        this.myPosts = this.myPosts.filter(post => post.id !== id);
+      } catch (err: any) {
+        this.error = err.message || 'Failed to delete post';
+        throw err;
       } finally {
         this.loading = false;
       }
-    },
-  },
+    }
+  }
 });

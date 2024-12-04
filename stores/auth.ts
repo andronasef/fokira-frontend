@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { useCookie } from '#app';
 
 interface User {
   id: string;
@@ -11,7 +10,8 @@ interface User {
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User | null,
-    token: useCookie('auth_token').value as string | null,
+    token: null as string | null,
+    loading: true,
   }),
 
   getters: {
@@ -20,21 +20,30 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login(token: string) {
-      const tokenCookie = useCookie('auth_token', {
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-        secure: true,
-        sameSite: 'lax',
-        path: '/',
-      });
+      this.loading = true;
       
-      tokenCookie.value = token;
-      this.token = token;
-      
-      await this.fetchUser();
+      try {
+        const tokenCookie = useCookie('auth_token', {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          secure: true,
+          sameSite: 'lax',
+          path: '/',
+        });
+        
+        tokenCookie.value = token;
+        this.token = token;
+        
+        await this.fetchUser();
+      } finally {
+        this.loading = false;
+      }
     },
 
     async fetchUser() {
-      if (!this.token) return null;
+      if (!this.token) {
+        this.user = null;
+        return null;
+      }
 
       try {
         const config = useRuntimeConfig();
@@ -57,7 +66,20 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       const tokenCookie = useCookie('auth_token');
       tokenCookie.value = null;
-      navigateTo('/login');
+    },
+
+    async initAuth() {
+      this.loading = true;
+      
+      try {
+        const tokenCookie = useCookie('auth_token');
+        if (tokenCookie.value) {
+          this.token = tokenCookie.value;
+          await this.fetchUser();
+        }
+      } finally {
+        this.loading = false;
+      }
     },
   },
 });
