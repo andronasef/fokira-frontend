@@ -5,32 +5,44 @@
   -->
 <template>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">{{ $t("nav.home") }}</h1>
-
-    <div v-if="postsStore.loading" class="text-center py-8">
-      {{ $t("common.loading") }}
-    </div>
-
-    <div v-else-if="postsStore.error" class="text-red-500 text-center py-8">
-      {{ postsStore.error }}
-    </div>
-
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div
-        v-for="post in postsStore.posts"
-        :key="post.id"
-        class="bg-white rounded-lg shadow-md overflow-hidden"
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold">{{ $t('nav.home') }}</h1>
+      <NuxtLink
+        to="/posts/create"
+        class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
       >
-        <StatusViewer :post="post" />
-      </div>
+        {{ $t('post.create') }}
+      </NuxtLink>
+    </div>
+
+    <div v-if="pending" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <PostCardSkeleton v-for="n in 9" :key="n" />
+    </div>
+
+    <div v-else-if="error" class="text-center py-8">
+      <p class="text-red-500">{{ error }}</p>
+    </div>
+
+    <div v-else-if="posts?.length === 0" class="text-center py-8">
+      <p class="text-gray-600">{{ $t('post.noPosts') }}</p>
+    </div>
+
+    <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <PostCard
+        v-for="post in posts"
+        :key="post.id"
+        :post="post"
+        :show-actions="false"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const postsStore = usePostsStore();
+import PostCardSkeleton from '@/components/PostCardSkeleton.vue';
 
-onMounted(async () => {
-  await postsStore.fetchPosts();
-});
+const config = useRuntimeConfig();
+const { t } = useI18n();
+
+const { data: posts, pending, error } = await useFetch(`${config.public.apiBase}/posts`);
 </script>
