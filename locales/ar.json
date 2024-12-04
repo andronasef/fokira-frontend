@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "myPosts": "منشوراتي",
+    "newPost": "منشور جديد",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج"
+  },
+  "post": {
+    "create": "إنشاء منشور",
+    "addSlide": "إضافة شريحة",
+    "slideContent": "محتوى الشريحة",
+    "maxWords": "الحد الأقصى 30 كلمة",
+    "publish": "نشر",
+    "cancel": "إلغاء"
+  },
+  "auth": {
+    "loginWithGoogle": "تسجيل الدخول باستخدام جوجل",
+    "welcome": "مرحباً بك",
+    "loginRequired": "يجب تسجيل الدخول أولاً",
+    "processingLogin": "جاري معالجة تسجيل الدخول..."
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "success": "تم بنجاح",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "save": "حفظ"
+  }
+}

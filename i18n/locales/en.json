@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "Home",
+    "myPosts": "My Posts",
+    "newPost": "New Post",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "post": {
+    "create": "Create Post",
+    "addSlide": "Add Slide",
+    "slideContent": "Slide Content",
+    "maxWords": "Maximum 30 words",
+    "publish": "Publish",
+    "cancel": "Cancel"
+  },
+  "auth": {
+    "loginWithGoogle": "Login with Google",
+    "welcome": "Welcome",
+    "loginRequired": "Login Required"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "success": "Success",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save"
+  }
+}
