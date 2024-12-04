@@ -104,7 +104,10 @@
 </template>
 
 <script setup lang="ts">
-const config = useRuntimeConfig();
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const router = useRouter();
 const { t } = useI18n();
 const { showToast } = useToast();
