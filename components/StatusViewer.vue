@@ -1,175 +1,204 @@
 <template>
-  <div class="relative">
-    <!-- Header -->
-    <div class="flex items-center space-x-3 space-x-reverse p-4 border-b">
-      <img 
-        :src="post.author.avatar || '/default-avatar.png'" 
-        :alt="post.author.name"
-        class="w-10 h-10 rounded-full"
-      >
-      <div>
-        <h3 class="font-semibold">{{ post.author.name }}</h3>
-        <p class="text-sm text-gray-500">
-          {{ new Date(post.createdAt).toLocaleDateString() }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Slides -->
-    <div class="relative h-[400px] bg-gray-900">
-      <TransitionGroup name="fade">
-        <div 
-          v-for="(slide, index) in post.slides" 
-          :key="slide.id"
-          v-show="currentSlide === index"
-          class="absolute inset-0 flex items-center justify-center p-8"
+  <Teleport to="body">
+    <div class="fixed inset-0 bg-black z-50">
+      <div class="h-full">
+        <swiper
+          :modules="[Navigation, Autoplay]"
+          :slides-per-view="1"
+          :autoplay="{ delay: 5000 }"
+          :navigation="true"
+          @swiper="onSwiper"
+          @slideChange="handleSlideChange"
+          class="h-full"
         >
-          <p class="text-white text-xl text-center">{{ slide.content }}</p>
-        </div>
-      </TransitionGroup>
-
-      <!-- Progress bars -->
-      <div class="absolute top-0 left-0 right-0 flex gap-1 p-2">
-        <div 
-          v-for="(slide, index) in post.slides" 
-          :key="slide.id"
-          class="h-1 flex-1 bg-gray-600 rounded-full overflow-hidden"
-        >
-          <div 
-            class="h-full bg-white transition-all duration-100"
-            :style="{ width: getProgressWidth(index) }"
-          ></div>
+          <swiper-slide
+            v-for="(slide, index) in slides"
+            :key="index"
+            class="h-full flex items-center justify-center"
+          >
+            <div
+              v-motion
+              :initial="{ opacity: 0, scale: 0.9 }"
+              :enter="{ opacity: 1, scale: 1 }"
+              :transition="{ duration: 300 }"
+              :class="[
+                'w-full h-full flex justify-center items-center bg-gray-800 rounded-lg p-6 text-white text-center relative',
+                getSlideGradient(index),
+              ]"
+            >
+              <p class="text-xl">{{ slide.content }}</p>
+            </div>
+          </swiper-slide>
+        </swiper>
+        <div class="absolute bottom-0 left-0 right-0 p-4 z-10">
+          <div class="bg-white/10 h-2 rounded-full">
+            <div
+              class="bg-white h-2 rounded-full"
+              :style="{ width: `${progressValue * 100}%` }"
+            ></div>
+          </div>
         </div>
       </div>
 
-      <!-- Navigation buttons -->
-      <button 
-        @click="prevSlide" 
-        class="absolute left-2 top-1/2 -translate-y-1/2 text-white p-2"
-        v-show="currentSlide > 0"
+      <!-- Header -->
+      <div
+        class="absolute top-0 left-0 right-0 flex items-center justify-between p-4 z-10"
+        @click.stop
       >
-        <ChevronLeftIcon class="w-6 h-6" />
-      </button>
-      <button 
-        @click="nextSlide" 
-        class="absolute right-2 top-1/2 -translate-y-1/2 text-white p-2"
-        v-show="currentSlide < post.slides.length - 1"
-      >
-        <ChevronRightIcon class="w-6 h-6" />
-      </button>
-    </div>
+        <div class="flex items-center space-x-3 space-x-reverse">
+          <UiAvatar :name="post.author.name" :src="post.author.avatar" />
+          <div class="text-white">
+            <h3 class="font-semibold">{{ post.author.name }}</h3>
+            <p class="text-sm opacity-80">
+              {{ formatTimestamp(post.createdAt) }}
+            </p>
+          </div>
+        </div>
 
-    <!-- Delete button for owner -->
-    <button 
-      v-if="canDelete" 
-      @click="deletePost"
-      class="absolute top-4 right-4 text-red-500 hover:text-red-600"
-    >
-      <TrashIcon class="w-5 h-5" />
-    </button>
-  </div>
+        <button
+          @click="closeViewer"
+          class="text-white p-2 hover:bg-white/10 rounded-full transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Navigation, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import UiAvatar from "./ui/Avatar.vue";
 
 const props = defineProps<{
   post: {
-    id: string
-    slides: Array<{
-      id: string
-      content: string
-      duration: number
-    }>
+    id: string;
+    title: string;
+    slides: Array<{ content: string }>;
     author: {
-      id: string
-      name: string
-      avatar?: string
+      name: string;
+      avatar?: string;
+    };
+    createdAt: string;
+  };
+}>();
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
+const swiperInstance = ref(null);
+const slides = computed(() => props.post.slides);
+
+const onSwiper = (swiper) => {
+  swiperInstance.value = swiper;
+};
+
+const closeViewer = () => {
+  emit("close");
+};
+
+const formatTimestamp = (timestamp: string) => {
+  return new Date(timestamp).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+// Array of beautiful gradient colors
+const gradients = [
+  "bg-gradient-to-r from-purple-500 to-pink-500",
+  "bg-gradient-to-r from-cyan-500 to-blue-500",
+  "bg-gradient-to-r from-emerald-500 to-teal-500",
+  "bg-gradient-to-r from-rose-500 to-orange-500",
+  "bg-gradient-to-r from-violet-500 to-fuchsia-500",
+  "bg-gradient-to-r from-amber-500 to-yellow-500",
+  "bg-gradient-to-r from-indigo-500 to-purple-500",
+  "bg-gradient-to-r from-blue-500 to-indigo-500",
+  "bg-gradient-to-r from-green-500 to-emerald-500",
+  "bg-gradient-to-r from-pink-500 to-rose-500",
+];
+
+// Get random gradient for each slide
+const getSlideGradient = (index: number) => {
+  return gradients[index % gradients.length];
+};
+
+// Progress tracking
+const currentSlideIndex = ref(0);
+const progressValue = ref(0);
+let progressInterval: NodeJS.Timer | null = null;
+
+const handleSlideChange = (swiper) => {
+  currentSlideIndex.value = swiper.activeIndex;
+  startProgress();
+};
+
+const startProgress = () => {
+  // Reset previous interval
+  if (progressInterval) {
+    clearInterval(progressInterval);
+  }
+
+  // Reset progress
+  progressValue.value = 0;
+
+  // Start new progress
+  const startTime = Date.now();
+  progressInterval = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    progressValue.value = Math.min(elapsed / 5000, 1);
+
+    if (progressValue.value >= 1) {
+      clearInterval(progressInterval);
     }
-    createdAt: string
-  }
-}>()
-
-const authStore = useAuthStore()
-const postsStore = usePostsStore()
-
-const currentSlide = ref(0)
-const progress = ref(0)
-const timer = ref<NodeJS.Timeout>()
-
-const canDelete = computed(() => {
-  return authStore.user?.id === props.post.author.id
-})
-
-const getProgressWidth = (index: number) => {
-  if (index < currentSlide.value) return '100%'
-  if (index > currentSlide.value) return '0%'
-  return `${progress.value}%`
-}
-
-const startTimer = () => {
-  const duration = props.post.slides[currentSlide.value].duration
-  const interval = 50 // Update every 50ms
-  const steps = duration / interval
-  let currentStep = 0
-
-  clearInterval(timer.value)
-  progress.value = 0
-
-  timer.value = setInterval(() => {
-    currentStep++
-    progress.value = (currentStep / steps) * 100
-
-    if (currentStep >= steps) {
-      clearInterval(timer.value)
-      if (currentSlide.value < props.post.slides.length - 1) {
-        nextSlide()
-      }
-    }
-  }, interval)
-}
-
-const nextSlide = () => {
-  if (currentSlide.value < props.post.slides.length - 1) {
-    currentSlide.value++
-    startTimer()
-  }
-}
-
-const prevSlide = () => {
-  if (currentSlide.value > 0) {
-    currentSlide.value--
-    startTimer()
-  }
-}
-
-const deletePost = async () => {
-  if (confirm('Are you sure you want to delete this post?')) {
-    try {
-      await postsStore.deletePost(props.post.id)
-    } catch (error) {
-      console.error('Failed to delete post:', error)
-    }
-  }
-}
+  }, 16); // ~60fps
+};
 
 onMounted(() => {
-  startTimer()
-})
+  document.body.style.overflow = "hidden";
+  startProgress(); // Start progress for first slide
+});
 
 onUnmounted(() => {
-  clearInterval(timer.value)
-})
+  document.body.style.overflow = "";
+  if (progressInterval) {
+    clearInterval(progressInterval);
+  }
+});
 </script>
 
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+<style>
+.swiper {
+  width: 100%;
+  height: 100%;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.swiper-button-next,
+.swiper-button-prev {
+  color: white !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 24px !important;
 }
 </style>
