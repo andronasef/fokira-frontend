@@ -1,11 +1,7 @@
 <template>
   <div class="min-h-screen flex items-center justify-center">
-    <div class="text-center">
-      <h1 class="text-2xl font-bold mb-4">{{ $t('auth.processingLogin') }}</h1>
-      <div v-if="error" class="text-red-500">
-        {{ error }}
-      </div>
-    </div>
+    <div v-if="error" class="text-red-500">{{ error }}</div>
+    <div v-else class="text-gray-500">جاري تسجيل الدخول...</div>
   </div>
 </template>
 
@@ -16,27 +12,22 @@ const authStore = useAuthStore();
 const error = ref<string | null>(null);
 
 onMounted(async () => {
-  const { token } = route.query;
-  
-  if (!token || typeof token !== 'string') {
-    error.value = 'Invalid token';
-    setTimeout(() => router.push('/'), 2000);
+  const token = route.query.token as string;
+  const redirect = route.query.redirect as string || '/';
+
+  if (!token) {
+    error.value = 'رمز المصادقة غير صالح';
+    setTimeout(() => router.push('/login'), 2000);
     return;
   }
 
   try {
-    // Set the token in the store
-    authStore.setToken(token);
-    
-    // Fetch user data
-    await authStore.checkAuth();
-    
-    // Redirect to home page
-    router.push('/');
+    await authStore.login(token);
+    router.push(redirect);
   } catch (err) {
-    console.error('Login callback error:', err);
-    error.value = 'Failed to process login';
-    setTimeout(() => router.push('/'), 2000);
+    console.error('Login error:', err);
+    error.value = 'حدث خطأ أثناء تسجيل الدخول';
+    setTimeout(() => router.push('/login'), 2000);
   }
 });
 </script>

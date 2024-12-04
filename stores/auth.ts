@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useCookie } from '#app';
 
 interface User {
   id: string;
@@ -7,19 +8,10 @@ interface User {
   avatar?: string;
 }
 
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
-  error: string | null;
-}
-
 export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    user: null,
-    token: null,
-    loading: false,
-    error: null,
+  state: () => ({
+    user: null as User | null,
+    token: useCookie('auth_token').value as string | null,
   }),
 
   getters: {
@@ -27,44 +19,45 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    setToken(token: string) {
+    async login(token: string) {
+      const tokenCookie = useCookie('auth_token', {
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        secure: true,
+        sameSite: 'lax',
+        path: '/',
+      });
+      
+      tokenCookie.value = token;
       this.token = token;
-      localStorage.setItem('token', token);
+      
+      await this.fetchUser();
     },
 
-    setUser(user: User) {
-      this.user = user;
-    },
-
-    async checkAuth() {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
-      this.loading = true;
-      this.error = null;
+    async fetchUser() {
+      if (!this.token) return null;
 
       try {
         const config = useRuntimeConfig();
         const response = await $fetch<{ user: User }>(`${config.public.apiBase}/auth/me`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${this.token}`,
           },
         });
-
-        this.token = token;
+        
         this.user = response.user;
+        return response.user;
       } catch (error) {
-        console.error('Auth check failed:', error);
         this.logout();
-      } finally {
-        this.loading = false;
+        return null;
       }
     },
 
     logout() {
       this.user = null;
       this.token = null;
-      localStorage.removeItem('token');
+      const tokenCookie = useCookie('auth_token');
+      tokenCookie.value = null;
+      navigateTo('/login');
     },
   },
-})
+});
