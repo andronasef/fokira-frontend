@@ -1,30 +1,65 @@
 {
   "nav": {
     "home": "الرئيسية",
-    "myPosts": "منشوراتي",
-    "newPost": "منشور جديد",
+    "my-posts": "منشوراتي",
+    "create-post": "إنشاء منشور",
+    "new-post": "منشور جديد",
     "login": "تسجيل الدخول",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات"
   },
   "post": {
     "create": "إنشاء منشور",
-    "addSlide": "إضافة شريحة",
-    "slideContent": "محتوى الشريحة",
-    "maxWords": "الحد الأقصى 30 كلمة",
+    "title": "العنوان",
+    "title-placeholder": "أدخل عنوان المنشور",
+    "content": "المحتوى",
+    "content-placeholder": "أدخل محتوى المنشور",
+    "slide-content": "محتوى الشريحة",
+    "add-slide": "إضافة شريحة",
+    "remove-slide": "حذف الشريحة",
     "publish": "نشر",
-    "cancel": "إلغاء"
-  },
-  "auth": {
-    "loginWithGoogle": "تسجيل الدخول باستخدام جوجل",
-    "welcome": "مرحباً بك",
-    "loginRequired": "يجب تسجيل الدخول أولاً"
+    "submit": "نشر",
+    "word-limit": "الحد الأقصى {limit} كلمة",
+    "words-remaining": "متبقي {count} كلمة",
+    "words": "كلمات",
+    "max-words": "الحد الأقصى 30 كلمة",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "view": "عرض",
+    "untitled": "بدون عنوان",
+    "author": "الكاتب",
+    "created-at": "تاريخ الإنشاء",
+    "updated-at": "تاريخ التحديث",
+    "delete-confirm": "هل أنت متأكد من حذف هذا المنشور؟",
+    "confirm-delete": "هل أنت متأكد من حذف هذا المنشور؟",
+    "delete-success": "تم حذف المنشور بنجاح",
+    "delete-error": "حدث خطأ أثناء حذف المنشور",
+    "create-success": "تم إنشاء المنشور بنجاح",
+    "create-error": "حدث خطأ أثناء إنشاء المنشور",
+    "no-posts": "لا توجد منشورات",
+    "no-my-posts": "ليس لديك أي منشورات",
+    "recent-updates": "آخر التحديثات",
+    "slides": "شرائح",
+    "slide-number": "الشريحة {number}",
+    "more-slides": "شريحة أخرى",
+    "word-count": "عدد الكلمات",
+    "slide-count": "الشريحة {current} من {total}",
+    "validation": {
+      "title-required": "العنوان مطلوب",
+      "content-required": "المحتوى مطلوب",
+      "title-max-length": "يجب ألا يتجاوز العنوان 100 حرف",
+      "required": "هذا الحقل مطلوب",
+      "max-length": "يجب ألا يتجاوز {max} حرف",
+      "min-words": "يجب أن يحتوي على كلمة واحدة على الأقل"
+    }
   },
   "common": {
     "loading": "جاري التحميل...",
     "error": "حدث خطأ",
     "success": "تم بنجاح",
-    "delete": "حذف",
-    "edit": "تعديل",
-    "save": "حفظ"
+    "confirm": "تأكيد",
+    "cancel": "إلغاء"
   }
 }

@@ -1,30 +1,78 @@
 {
   "nav": {
     "home": "Home",
-    "myPosts": "My Posts",
-    "newPost": "New Post",
+    "my-posts": "My Posts",
+    "create-post": "Create Post",
+    "new-post": "New Post",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings"
   },
   "post": {
     "create": "Create Post",
-    "addSlide": "Add Slide",
-    "slideContent": "Slide Content",
-    "maxWords": "Maximum 30 words",
+    "title": "Post Title",
+    "title-placeholder": "Enter your post title here...",
+    "content-placeholder": "Enter your slide content here...",
+    "slide-content": "Slide Content",
+    "add-slide": "Add Slide",
+    "remove-slide": "Remove Slide",
     "publish": "Publish",
-    "cancel": "Cancel"
+    "word-limit": "Maximum {limit} words",
+    "words-remaining": "{count} words remaining",
+    "words": "words",
+    "max-words": "Maximum 30 words",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "untitled": "Untitled",
+    "content": "Content",
+    "author": "Author",
+    "created-at": "Created At",
+    "updated-at": "Updated At",
+    "delete-confirm": "Are you sure you want to delete this post?",
+    "delete-success": "Post deleted successfully",
+    "create-success": "Post created successfully",
+    "no-posts": "No posts found",
+    "no-my-posts": "You don't have any posts yet",
+    "recent-updates": "Recent Updates",
+    "slides": "Slides",
+    "slide-number": "Slide {number}",
+    "more-slides": "more slides",
+    "word-count": "Word count",
+    "slide-count": "Slide {current} of {total}",
+    "validation": {
+      "title-required": "Title is required",
+      "content-required": "Content is required",
+      "title-max-length": "Title must not exceed 100 characters",
+      "required": "This field is required",
+      "max-length": "Must not exceed {max} characters",
+      "min-words": "Must contain at least one word",
+      "max-words": "Must not exceed {max} words"
+    }
   },
   "auth": {
-    "loginWithGoogle": "Login with Google",
+    "login-with-google": "Login with Google",
     "welcome": "Welcome",
-    "loginRequired": "Login Required"
+    "login-required": "Login Required",
+    "processing-login": "Processing login...",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name"
   },
   "common": {
     "loading": "Loading...",
-    "error": "Error occurred",
+    "error": "An error occurred",
     "success": "Success",
     "delete": "Delete",
     "edit": "Edit",
-    "save": "Save"
+    "save": "Save",
+    "cancel": "Cancel",
+    "deleting": "Deleting...",
+    "publishing": "Publishing..."
   }
 }
