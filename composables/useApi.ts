@@ -1,4 +1,4 @@
-import { UseFetchOptions } from "nuxt/app";
+import type { UseFetchOptions } from "#app";
 
 export function useApi() {
   const config = useRuntimeConfig();
@@ -38,9 +38,49 @@ export function useApi() {
     return useFetch<T>(`${config.public.apiBase}${endpoint}`, options);
   };
 
+  // Posts API
+  const getPosts = async ({ page = 1, limit = 10 } = {}) => {
+    const { data } = await fetchWithoutAuth(
+      `/posts?page=${page}&limit=${limit}`
+    );
+    return data.value;
+  };
+
+  const getUserPosts = async (
+    userId: string,
+    { page = 1, limit = 10 } = {}
+  ) => {
+    const { data } = await fetchWithoutAuth(
+      `/posts/user/${userId}?page=${page}&limit=${limit}`
+    );
+    return data.value;
+  };
+
+  const createPost = async (postData: any) => {
+    const { data } = await fetchWithAuth("/posts", {
+      method: "POST",
+      body: postData,
+    });
+  };
+
+  // Users API
+  const getLatestUsers = () => {
+    return $fetch(`${config.public.apiBase}/users/latest`);
+  };
+
+  const getUserProfile = (userId: string) => {
+    return $fetch(`${config.public.apiBase}/users/${userId}/profile`);
+  };
+
   return {
     fetchWithAuth,
     $fetchWithAuth,
     fetchWithoutAuth,
+    // Posts
+    getPosts,
+    getUserPosts,
+    createPost,
+    getLatestUsers,
+    getUserProfile,
   };
 }
