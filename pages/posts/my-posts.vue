@@ -34,7 +34,11 @@
 </template>
 
 <script setup lang="ts">
-import PostCardSkeleton from '@/components/PostCardSkeleton.vue';
+definePageMeta({
+  middleware: ["auth"],
+});
+
+import PostCardSkeleton from "@/components/PostCardSkeleton.vue";
 
 const { fetchWithAuth } = useApi();
 

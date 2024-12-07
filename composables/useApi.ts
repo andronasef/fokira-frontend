@@ -63,6 +63,19 @@ export function useApi() {
     });
   };
 
+  const deletePost = async (postId: string) => {
+    return $fetchWithAuth<void>(`/posts/${postId}`, {
+      method: 'DELETE',
+    });
+  };
+
+  const updatePost = async (postId: string, postData: any) => {
+    return $fetchWithAuth<void>(`/posts/${postId}`, {
+      method: 'PATCH',
+      body: postData,
+    });
+  };
+
   // Users API
   const getLatestUsers = () => {
     return $fetch(`${config.public.apiBase}/users/latest`);
@@ -80,6 +93,8 @@ export function useApi() {
     getPosts,
     getUserPosts,
     createPost,
+    deletePost,
+    updatePost,
     getLatestUsers,
     getUserProfile,
   };

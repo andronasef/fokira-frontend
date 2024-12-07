@@ -7,6 +7,7 @@
     :delay="150"
     class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
   >
+    <!-- Header -->
     <div class="p-4">
       <div class="flex items-start justify-between">
         <div class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -19,45 +20,48 @@
           </div>
         </div>
 
-        <div
-          v-if="showActions"
-          class="flex items-center space-x-2 space-x-reverse"
-        >
-          <!-- View Status Button -->
-          <button
-            @click="isViewerOpen = true"
-            class="text-green-600 hover:text-green-700 transition-colors"
+        <!-- Actions -->
+        <div v-if="showActions" class="flex gap-2">
+          <!-- Edit Button -->
+          <NuxtLink
+            :to="`/posts/edit/${post.id}`"
+            class="text-blue-500 hover:text-blue-600 transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
               />
             </svg>
-          </button>
+          </NuxtLink>
 
           <!-- Delete Button -->
           <button
-            v-if="post.isOwner"
-            @click="deletePost"
+            @click="handleDelete"
             :disabled="isDeleting"
-            class="text-red-500 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
           >
-            <div v-if="isDeleting" class="flex items-center">
-              <div
-                class="animate-spin h-4 w-4 border-2 border-red-500 border-t-transparent rounded-full mr-2"
-              ></div>
-              {{ t("common.deleting") }}
-            </div>
-            <span v-else>{{ t("post.delete") }}</span>
+            <svg
+              v-if="!isDeleting"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <div
+              v-else
+              class="h-5 w-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"
+            ></div>
           </button>
         </div>
       </div>
@@ -97,7 +101,11 @@ import StatusViewer from "./StatusViewer.vue";
 
 const { t } = useI18n();
 const { showToast } = useToast();
-const { $fetchWithAuth } = useApi();
+const { deletePost: apiDeletePost } = useApi();
+
+const emit = defineEmits<{
+  (e: "deleted"): void;
+}>();
 
 const props = defineProps<{
   post: {
@@ -123,20 +131,25 @@ const handleAvatarError = (e: Event) => {
   img.src = "/default-avatar.png";
 };
 
-const deletePost = async () => {
-  if (!confirm(t("post.confirm-delete"))) return;
+const handleDelete = async () => {
+  if (!confirm(t("post.delete-confirm"))) return;
 
   isDeleting.value = true;
   try {
-    await $fetchWithAuth(`/posts/${props.post.id}`, {
-      method: "DELETE",
+    await apiDeletePost(props.post.id);
+    showToast({
+      type: "success",
+      message: t("post.deleted-successfully"),
     });
-    showToast(t("post.delete-success"), "success");
-    window.location.reload();
-  } catch (error) {
-    showToast(t("post.delete-error"), "error");
+    emit("deleted");
+  } catch (error: any) {
+    showToast({
+      type: "error",
+      message: error.message || t("error.something-went-wrong"),
+    });
   } finally {
     isDeleting.value = false;
+    location.reload();
   }
 };
 

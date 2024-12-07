@@ -52,8 +52,16 @@
       "title-max-length": "يجب ألا يتجاوز العنوان 100 حرف",
       "required": "هذا الحقل مطلوب",
       "max-length": "يجب ألا يتجاوز {max} حرف",
-      "min-words": "يجب أن يحتوي على كلمة واحدة على الأقل"
-    }
+      "min-words": "يجب أن يحتوي على كلمة واحدة على الأقل",
+      "max-words": "يجب ألا يتجاوز {max} للكلمات"
+    },
+    "deleted-successfully": "تم حذف المنشور بنجاح",
+    "updated-successfully": "تم تحديث المنشور بنجاح"
+  },
+  "home": {
+    "latest-members": "أحدث الأعضاء",
+    "latest-posts": "أحدث المنشورات",
+    "no-posts": "لا توجد منشورات حتى الآن"
   },
   "profile": {
     "posts": "المنشورات",
@@ -70,6 +78,32 @@
     "error": "حدث خطأ",
     "success": "تم بنجاح",
     "confirm": "تأكيد",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "publishing": "جاري الحفظ",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "deleting": "جاري الحذف..."
+  },
+  "action": {
+    "cancel": "إلغاء",
+    "retry": "إعادة المحاولة",
+    "save": "حفظ"
+  },
+  "auth": {
+    "email": "الايميل",
+    "login-required": "يجب تسجيل الدخول",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "login-with-google": "تسجيل الدخول بجوجل",
+    "password": "الرقم السري",
+    "name": "الاسم",
+    "register": "تسجيل حساب",
+    "processing-login": "جاري تسجيل الدخول ",
+    "welcome": "مرحبا"
+  },
+  "error": {
+    "something-went-wrong": "حدث خطأ ما",
+    "failed-to-load": "فشل في تحميل البيانات"
   }
 }
