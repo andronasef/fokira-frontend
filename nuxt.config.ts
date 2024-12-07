@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxtjs/i18n",
     "@vueuse/motion/nuxt",
+    "@nuxt/fonts",
   ],
   i18n: {
     defaultLocale: "ar",
@@ -27,5 +28,8 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:8000",
     },
+  },
+  fonts: {
+    families: [{ preload: true, name: "Noto Sans Arabic", provider: "google" }],
   },
 });

@@ -33,4 +33,8 @@ const logout = async () => {
 };
 </script>
 
-<style></style>
+<style>
+body {
+  font-family: "Noto Sans Arabic", sans-serif;
+}
+</style>
