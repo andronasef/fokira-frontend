@@ -23,7 +23,7 @@
       <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <div v-for="user in latestUsers" :key="user.id" class="text-center">
           <NuxtLink :to="`/profile/${user.id}`" class="block">
-            <UiAvatar :author="user" size="lg" class="mx-auto mb-2" />
+            <UiAvatar :author="user" size="48" class="mx-auto mb-2" />
             <h3 class="font-medium truncate">{{ user.name }}</h3>
           </NuxtLink>
         </div>

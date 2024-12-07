@@ -75,11 +75,7 @@
                 :enter="{ opacity: 1 }"
                 :delay="400"
               >
-                <UiAvatar
-                  :author="authStore.user"
-                  size="sm"
-                  :enable-link="false"
-                />
+                <UiAvatar :author="authStore.user" :enable-link="false" />
                 <span class="text-gray-700 md:flex hidden">{{
                   authStore.user.name
                 }}</span>

@@ -10,7 +10,7 @@
     <div class="p-4">
       <div class="flex items-start justify-between">
         <div class="flex items-center space-x-3 rtl:space-x-reverse">
-          <UiAvatar :author="post.author" size="md" />
+          <UiAvatar :author="post.author" size="32" />
           <div>
             <h3 class="font-medium">{{ post.author.name }}</h3>
             <time :datetime="post.createdAt" class="text-sm text-gray-500">

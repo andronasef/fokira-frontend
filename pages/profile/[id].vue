@@ -8,11 +8,7 @@
       :enter="{ opacity: 1, y: 0 }"
     >
       <div class="flex items-center space-x-4 rtl:space-x-reverse">
-        <UiAvatar
-          v-if="profile"
-          :author="profile"
-          size="lg"
-        />
+        <UiAvatar v-if="profile" :author="profile" size="48" />
         <div>
           <h1 class="text-2xl font-bold">{{ profile?.name }}</h1>
           <p class="text-gray-600">{{ profile?.email }}</p>
