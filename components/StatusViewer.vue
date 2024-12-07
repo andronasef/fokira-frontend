@@ -50,7 +50,7 @@
           <div class="text-white">
             <h3 class="font-semibold">{{ post.author.name }}</h3>
             <p class="text-sm opacity-80">
-              {{ formatTimestamp(post.createdAt) }}
+              {{ formatDate(post.createdAt) }}
             </p>
           </div>
         </div>
@@ -115,12 +115,13 @@ const closeViewer = () => {
   emit("close");
 };
 
-const formatTimestamp = (timestamp: string) => {
-  return new Date(timestamp).toLocaleDateString(undefined, {
+const formatDate = (date: string) => {
+  const dateFormatted = new Date(date).toLocaleDateString("ar-EG", {
     year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
   });
+  return dateFormatted;
 };
 
 // Array of beautiful gradient colors
