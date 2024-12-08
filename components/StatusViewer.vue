@@ -6,7 +6,6 @@
           :modules="[Navigation, Autoplay]"
           :slides-per-view="1"
           :autoplay="{ delay: 5000 }"
-          :navigation="true"
           @swiper="onSwiper"
           @slideChange="handleSlideChange"
           class="h-full"
@@ -136,12 +135,62 @@ const gradients = [
   "bg-gradient-to-r from-blue-500 to-indigo-500",
   "bg-gradient-to-r from-green-500 to-emerald-500",
   "bg-gradient-to-r from-pink-500 to-rose-500",
+  // New gradients
+  "bg-gradient-to-r from-red-500 to-pink-500",
+  "bg-gradient-to-r from-yellow-500 to-green-500",
+  "bg-gradient-to-r from-blue-600 to-purple-600",
+  "bg-gradient-to-r from-teal-400 to-blue-400",
+  "bg-gradient-to-r from-fuchsia-600 to-pink-600",
+  "bg-gradient-to-r from-amber-400 to-orange-400",
+  "bg-gradient-to-r from-lime-500 to-green-500",
+  "bg-gradient-to-r from-sky-500 to-indigo-500",
+  "bg-gradient-to-r from-violet-600 to-indigo-600",
+  "bg-gradient-to-r from-orange-500 to-red-500",
+  "bg-gradient-to-r from-emerald-400 to-cyan-400",
+  "bg-gradient-to-r from-rose-400 to-red-400",
+  "bg-gradient-to-r from-purple-600 to-violet-600",
+  "bg-gradient-to-r from-green-400 to-lime-400",
+  "bg-gradient-to-r from-blue-500 to-sky-500",
+  "bg-gradient-to-r from-pink-600 to-rose-600",
+  "bg-gradient-to-r from-teal-500 to-emerald-500",
+  "bg-gradient-to-r from-indigo-400 to-blue-400",
+  "bg-gradient-to-r from-orange-600 to-amber-600",
+  "bg-gradient-to-r from-cyan-600 to-teal-600",
+  "bg-gradient-to-r from-violet-400 to-purple-400",
+  "bg-gradient-to-r from-yellow-400 to-amber-400",
+  "bg-gradient-to-r from-rose-500 to-pink-500",
+  "bg-gradient-to-r from-sky-400 to-cyan-400",
+  "bg-gradient-to-r from-lime-600 to-emerald-600",
+  "bg-gradient-to-r from-fuchsia-500 to-violet-500",
+  "bg-gradient-to-r from-red-600 to-orange-600",
+  "bg-gradient-to-r from-green-600 to-teal-600",
+  "bg-gradient-to-r from-blue-400 to-indigo-400",
+  "bg-gradient-to-r from-pink-400 to-fuchsia-400",
 ];
+
+// Shuffled gradients array
+const shuffledGradients = ref<string[]>([]);
+
+// Fisher-Yates shuffle algorithm
+const shuffleArray = (array: string[]) => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
 
 // Get random gradient for each slide
 const getSlideGradient = (index: number) => {
-  return gradients[index % gradients.length];
+  return shuffledGradients.value[index % shuffledGradients.value.length];
 };
+
+onMounted(() => {
+  document.body.style.overflow = "hidden";
+  shuffledGradients.value = shuffleArray(gradients);
+  startProgress(); // Start progress for first slide
+});
 
 // Progress tracking
 const currentSlideIndex = ref(0);
