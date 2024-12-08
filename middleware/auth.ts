@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
   // If user is not authenticated, redirect to login
   if (!authStore.isAuthenticated) {
-    return navigateTo(`${config.public.apiBase}/auth/google`, {
+    return navigateTo(`/auth/login`, {
       external: true,
     });
   }

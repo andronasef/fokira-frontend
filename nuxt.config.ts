@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@vueuse/motion/nuxt",
     "@nuxt/fonts",
+    "@nuxt/icon",
   ],
   i18n: {
     defaultLocale: "ar",

@@ -130,7 +130,7 @@ const config = useRuntimeConfig();
 const isProfileOpen = ref(false);
 
 const login = () => {
-  window.location.href = `${config.public.apiBase}/auth/google`;
+  navigateTo("/auth/login");
 };
 
 const logout = () => {
